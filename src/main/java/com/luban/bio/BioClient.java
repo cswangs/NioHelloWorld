@@ -1,41 +1,54 @@
 package com.luban.bio;
 
+import com.sun.deploy.util.ArrayUtil;
+import com.sun.tools.javac.util.ArrayUtils;
+import io.netty.buffer.ByteBufUtil;
+
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class BioClient {
-    public static void main(String[] args) {
+  public static void main(String[] args) {
 
-        try {
-            Socket socket=new Socket("127.0.0.1",6789);
-            new Thread(){
-                @Override
-                public void run() {
-                    while (true){
-                        try {
-                            byte[] b=new byte[1024];
-                            int read = socket.getInputStream().read(b);
-                            if(read>0){
-                                System.out.println(new String(b));
-                                break;
-                            }
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }.start();
-
-            while (true){
-                Scanner scanner=new Scanner(System.in);
-                while(scanner.hasNextLine()){
-                    String s = scanner.nextLine();
-                    socket.getOutputStream().write(s .getBytes());
-                }
+    try {
+      final Socket socket = new Socket("127.0.0.1", 9090);
+      new Thread() {
+        @Override
+        public void run() {
+          while (!socket.isClosed()) {
+            try {
+              byte[] b = new byte[2048];
+              int read = socket.getInputStream().read(b);
+              if (read > 0) {
+                System.out.println(new String(Arrays.copyOf(b, read)));
+              }
+            } catch (Exception e) {
+              System.out.println(e.getMessage());
+              if ("Socket closed".equals(e.getMessage())) {
+                break;
+              }
+              e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+          }
         }
+      }.start();
+      boolean stop = false;
+      while (!stop) {
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextLine()) {
+          String s = scanner.nextLine();
+          if (s.equals("exit")) {
+            socket.close();
+            stop = true;
+            break;
+          }
+          socket.getOutputStream().write(s.getBytes());
+        }
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+  }
 }
