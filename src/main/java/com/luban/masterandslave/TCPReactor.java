@@ -21,6 +21,7 @@
 
             Acceptor acceptor = new Acceptor(ssc);
 
+            //单独使用一个selector
             SelectionKey sk = ssc.register(selector,SelectionKey.OP_ACCEPT); // ServerSocketChannel向selector註冊一個OP_ACCEPT事件，然後返回該通道的key
             sk.attach(acceptor); // 給定key一個附加的Acceptor對象
 

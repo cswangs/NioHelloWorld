@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
+import java.util.Arrays;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -56,8 +57,8 @@ public class TCPHandler implements Runnable {
       closeChannel();
       return;
     }
-    String str = new String(arr); // 將讀取到的byte內容轉為字符串型態
-    if ((str != null) && !str.equals(" ")) {
+    String str = new String(Arrays.copyOf(arr, numBytes)); // 將讀取到的byte內容轉為字符串型態
+    if (!str.equals(" ")) {
       process(str); // 邏輯處理
       System.out.println(sc.socket().getRemoteSocketAddress().toString()
           + " > " + str);

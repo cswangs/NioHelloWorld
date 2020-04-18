@@ -1,9 +1,5 @@
 package com.luban.bio;
 
-import com.sun.deploy.util.ArrayUtil;
-import com.sun.tools.javac.util.ArrayUtils;
-import io.netty.buffer.ByteBufUtil;
-
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Arrays;
@@ -13,7 +9,7 @@ public class BioClient {
   public static void main(String[] args) {
 
     try {
-      final Socket socket = new Socket("127.0.0.1", 9090);
+      final Socket socket = new Socket("127.0.0.1", 1333);
       new Thread() {
         @Override
         public void run() {

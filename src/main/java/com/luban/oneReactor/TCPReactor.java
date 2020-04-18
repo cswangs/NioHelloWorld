@@ -29,7 +29,8 @@
             while (!Thread.interrupted()) { // 在線程被中斷前持續運行  
                 System.out.println("Waiting for new event on port: " + ssc.socket().getLocalPort() + "...");  
                 try {  
-                    if (selector.select() == 0) // 若沒有事件就緒則不往下執行
+                    if (selector.select() == 0) // 阻塞方法  若沒有事件就緒則不往下執行
+                        //weakup之后会返回0 直接continue
                         continue;  
                 } catch (IOException e) {  
                     // TODO Auto-generated catch block  
